@@ -35,11 +35,15 @@
 				<div class="bg-slate-600" style="height:40rem"></div>
 			</div>
 		</div>
-		<div class="w-3/4 flex justify-between mx-8">
-			<h3 class="text-lg mx-4">Yaks</h3>
-			<button class="bg-black py-2 px-4 h-8 rounded-md text-white flex justify-center items-center"
-				>Add Item</button
-			>
+		<div class="w-3/4 justify-between mx-8">
+			<div class="flex justify-between mx-8">
+				<h3 class="text-lg">Yaks</h3>
+				<button
+					class="bg-black py-2 px-4 h-8 rounded-md text-white flex justify-center items-center"
+					>Add Item</button
+				>
+			</div>
+			<div class="bg-slate-600 mx-8" style="height:40rem"></div>
 		</div>
 	</div>
 </div>
