@@ -28,7 +28,7 @@ export const actions = {
                 maxAge: 60 * 60 * 24 // 1 day
             })
 
-            throw redirect(302, "/");
+            throw redirect(302, "/forms");
         } else {
             return invalid(422, { errors: await token });
         }
@@ -38,13 +38,14 @@ export const actions = {
 
         const name = data.get('username');
         const password = data.get('password');
+        const organization = data.get('org')
 
         const api_url = 'http://localhost:1323';
         const response = await fetch(`${api_url}/sign-up`,
             {
                 method: "POST",
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ 'username': name, 'password': password })
+                body: JSON.stringify({ 'username': name, 'password': password, 'organization': organization })
             }
         )
 
@@ -59,7 +60,7 @@ export const actions = {
                 maxAge: 60 * 60 * 24 // 1 day
             })
 
-            throw redirect(302, "/");
+            throw redirect(302, "/forms");
         } else if (response.status === 409) {
             throw redirect(302, "/login")
         }
