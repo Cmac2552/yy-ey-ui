@@ -4,6 +4,9 @@
 	import { applyAction, enhance } from '$app/forms';
 	import { goto, invalidateAll } from '$app/navigation';
 	import '../../app.css';
+
+	export let data;
+	//Merge the object into an array and then work with that
 </script>
 
 <div class="w-full h-full">
@@ -43,7 +46,12 @@
 					>Add Item</button
 				>
 			</div>
-			<div class="bg-slate-600 mx-8" style="height:40rem"></div>
+			{#each data.values as item}
+				{#each Object.entries(item) as [_, value]}
+					<span>{value}</span>
+				{/each}
+				<hr class="border-t-2" />
+			{/each}
 		</div>
 	</div>
 </div>
