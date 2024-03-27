@@ -6,23 +6,11 @@
 	import '../../app.css';
 
 	export let data;
+	console.log(data);
 	//Merge the object into an array and then work with that
 </script>
 
 <div class="w-full h-full">
-	<!-- <form
-		class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
-		method="POST"
-		use:enhance={() => {
-			return async ({ result }) => {
-				await invalidateAll();
-				await applyAction(result);
-			};
-		}}
-	>
-		<input />
-		<button class="bg-black py-2 px-4 rounded-md text-white">Create Table</button>
-	</form> -->
 	<div class="flex justify-between">
 		<h1 class="font-bold text-3xl my-2 mx-4">YY-EY</h1>
 		<div class="bg-gray-300 w-10 h-10 my-2 mx-3 rounded-full flex justify-center items-center">
@@ -46,12 +34,30 @@
 					>Add Item</button
 				>
 			</div>
-			{#each data.values as item}
-				{#each Object.entries(item) as [_, value]}
-					<span>{value}</span>
+			<div class="flex justify-around">
+				{#each data.attributes as item}
+					{#each Object.entries(item) as [_, value]}
+						<span class="w-5">{value}</span>
+					{/each}
 				{/each}
-				<hr class="border-t-2" />
-			{/each}
+			</div>
+			<hr class="border-t-2" />
+			<div>
+				{#each data.values as item}
+					<div class="flex justify-around">
+						{#each data.attributes as attribute}
+							{#each Object.entries(attribute) as [_, value]}
+								{#if item[value]}
+									<span class="w-5">{item[value]}</span>
+								{:else}
+									<span class="w-5"></span>
+								{/if}
+							{/each}
+						{/each}
+					</div>
+					<hr class="border-t-2" />
+				{/each}
+			</div>
 		</div>
 	</div>
 </div>
