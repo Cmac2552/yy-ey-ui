@@ -6,8 +6,8 @@
 	import '../../app.css';
 
 	export let data;
-	console.log(data);
-	//Merge the object into an array and then work with that
+	let dialog; // HTMLDialogElement
+	export let showModal; // boolean
 </script>
 
 <div class="w-full h-full">
@@ -30,6 +30,7 @@
 			<div class="flex justify-between mx-8">
 				<h3 class="text-lg">Yaks</h3>
 				<button
+					on:click={() => dialog.showModal()}
 					class="bg-black py-2 px-4 h-8 rounded-md text-white flex justify-center items-center"
 					>Add Item</button
 				>
@@ -61,3 +62,39 @@
 		</div>
 	</div>
 </div>
+<!-- svelte-ignore a11y-click-events-have-key-events a11y-no-noninteractive-element-interactions -->\
+<dialog
+	bind:this={dialog}
+	on:close={() => (showModal = false)}
+	on:click|self={() => dialog.close()}
+>
+	<!-- svelte-ignore a11y-no-static-element-interactions -->
+	<div
+		class="w-[30rem] h-fit-content pl-3 pt-4 pb-8 bg-white flex flex-col"
+		on:click|stopPropagation
+	>
+		<h2 class="font-bold text-3xl">Add Item</h2>
+		<form
+			class="flex flex-col"
+			method="POST"
+			action="?/addItem"
+			use:enhance={() => {
+				return async ({ result }) => {
+					await invalidateAll();
+					await applyAction(result);
+				};
+			}}
+		>
+			{#each data.attributes as item}
+				{#each Object.entries(item) as [_, value]}
+					<div flex>
+						<input class="border w-[50%] mt-2" name={value} />
+						<span>{value}</span>
+					</div>
+				{/each}
+			{/each}<!-- svelte-ignore a11y-autofocus -->
+			<button autofocus class="border w-[25%] mt-2" on:click={() => dialog.close()}>Add Item</button
+			>
+		</form>
+	</div>
+</dialog>

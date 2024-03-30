@@ -4,7 +4,7 @@ import { invalid, redirect } from '@sveltejs/kit';
 export const actions = {
     login: async ({ request, cookies }) => {
         const data = await request.formData();
-
+        console.log(data)
         const name = data.get('username');
         const password = data.get('password');
 
