@@ -7,7 +7,14 @@
 
 	export let data;
 	let dialog; // HTMLDialogElement
-	export let showModal; // boolean
+	let dialog2;
+	export let showModal = false; // boolean
+	export let showModal2 = false;
+	let itemToEdit = [];
+	function editItem(item) {
+		itemToEdit = Object.entries(item);
+		dialog2.showModal();
+	}
 </script>
 
 <div class="w-full h-full">
@@ -56,6 +63,7 @@
 							{/each}
 						{/each}
 					</div>
+					<button on:click={() => editItem(item)}>EDIT</button>
 					<hr class="border-t-2" />
 				{/each}
 			</div>
@@ -78,7 +86,8 @@
 			class="flex flex-col"
 			method="POST"
 			action="?/addItem"
-			use:enhance={() => {
+			use:enhance={({ formElement }) => {
+				formElement.reset();
 				return async ({ result }) => {
 					await invalidateAll();
 					await applyAction(result);
@@ -87,13 +96,63 @@
 		>
 			{#each data.attributes as item}
 				{#each Object.entries(item) as [_, value]}
-					<div flex>
+					<div>
 						<input class="border w-[50%] mt-2" name={value} />
 						<span>{value}</span>
 					</div>
 				{/each}
 			{/each}<!-- svelte-ignore a11y-autofocus -->
 			<button autofocus class="border w-[25%] mt-2" on:click={() => dialog.close()}>Add Item</button
+			>
+		</form>
+	</div>
+</dialog>
+<!-- svelte-ignore a11y-click-events-have-key-events a11y-no-noninteractive-element-interactions -->\
+<dialog
+	bind:this={dialog2}
+	on:close={() => (showModal2 = false)}
+	on:click|self={() => dialog2.close()}
+>
+	<!-- svelte-ignore a11y-no-static-element-interactions -->
+	<div
+		class="w-[30rem] h-fit-content pl-3 pt-4 pb-8 bg-white flex flex-col"
+		on:click|stopPropagation
+	>
+		<h2 class="font-bold text-3xl">Edit Item</h2>
+		<form
+			class="flex flex-col"
+			method="POST"
+			action="?/editItem"
+			use:enhance={({ formElement }) => {
+				formElement.reset();
+				return async ({ result }) => {
+					await invalidateAll();
+					await applyAction(result);
+				};
+			}}
+		>
+			{#each itemToEdit as [name, value]}
+				{#if name !== 'productNumber'}
+					<div>
+						<input bind:value class="border w-[50%] mt-2" {name} />
+						<span>{name}</span>
+					</div>
+				{:else}
+					<div>
+						<input
+							bind:value
+							type="number"
+							class=" w-[50%] mt-2 pointer-events-none focus-within:border-none"
+							{name}
+						/>
+
+						<span>{name}</span>
+					</div>
+				{/if}
+			{/each}
+			<!-- svelte-ignore a11y-autofocus -->
+			<button autofocus class="border w-[25%] mt-2" on:click={() => dialog2.close()}
+				>Edit Item</button
 			>
 		</form>
 	</div>

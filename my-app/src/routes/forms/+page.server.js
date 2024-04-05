@@ -28,23 +28,47 @@ export const load = async ({ cookies }) => {
 };
 
 export const actions = {
-    addItem: async ({ request, cookies }) => {
-        const data = await request.formData();
-        const item = {}
+    addItem: async (event) => {
+        const data = await event.request.formData();
+        const attrValues = {}
         for (let field of data) {
             const [key, value] = field
-            item[key] = value
+            attrValues[key] = value
         }
 
         const api_url = 'http://localhost:1323';
         await fetch(`${api_url}/inventory/product-and-attribute-values`, {
             method: "POST",
-            headers: { 'Authorization': cookies.get('Auth-token'), 'content-type': 'application/json' },
-            body: JSON.stringify({ 'productTypeName': 'yak', 'attrValues': item })
+            headers: { 'Authorization': event.cookies.get('Auth-token'), 'content-type': 'application/json' },
+            body: JSON.stringify({ 'productTypeName': 'yak', attrValues })
+        })
+    },
+    editItem: async (event) => {
+        const data = await event.request.formData();
+        console.log(data)
+        const attrValues = {}
+        let productNumber = 0
+
+        for (let field of data) {
+            const [key, value] = field
+            if (key !== 'productNumber') {
+                attrValues[key] = value
+            } else {
+                productNumber = Number(value)
+            }
+        }
+
+
+        const api_url = 'http://localhost:1323';
+        let req = await fetch(`${api_url}/inventory/product-and-attribute-values`, {
+            method: "PATCH",
+            headers: { 'Authorization': event.cookies.get('Auth-token'), 'content-type': 'application/json' },
+            body: JSON.stringify({
+                'productTypeName': 'yak', productNumber, attrValues
+            })
         })
 
-
-
+        console.log(await req.json())
     }
 };
 
