@@ -45,7 +45,6 @@ export const actions = {
     },
     editItem: async (event) => {
         const data = await event.request.formData();
-        console.log(data)
         const attrValues = {}
         let productNumber = 0
 
@@ -57,6 +56,7 @@ export const actions = {
                 productNumber = Number(value)
             }
         }
+        console.log(attrValues)
 
 
         const api_url = 'http://localhost:1323';
@@ -68,7 +68,6 @@ export const actions = {
             })
         })
 
-        console.log(await req.json())
     }
 };
 

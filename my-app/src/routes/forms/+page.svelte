@@ -10,9 +10,10 @@
 	let dialog2;
 	export let showModal = false; // boolean
 	export let showModal2 = false;
-	let itemToEdit = [];
+	let itemToEdit = {};
 	function editItem(item) {
-		itemToEdit = Object.entries(item);
+		console.log(item);
+		itemToEdit = item;
 		dialog2.showModal();
 	}
 </script>
@@ -131,7 +132,22 @@
 				};
 			}}
 		>
-			{#each itemToEdit as [name, value]}
+			<!-- Convert this to use attrs to determine how many inputs to use -->
+			{#each data.attributes as item}
+				{#each Object.entries(item) as [_, value]}
+					<div>
+						<input bind:value={itemToEdit[value]} class="border w-[50%] mt-2" name={value} />
+						<span>{value}</span>
+					</div>
+				{/each}
+			{/each}
+			<input
+				hidden
+				bind:value={itemToEdit['productNumber']}
+				class="border w-[50%] mt-2"
+				name="productNumber"
+			/>
+			<!-- {#each itemToEdit as [name, value]}
 				{#if name !== 'productNumber'}
 					<div>
 						<input bind:value class="border w-[50%] mt-2" {name} />
@@ -149,7 +165,7 @@
 						<span>{name}</span>
 					</div>
 				{/if}
-			{/each}
+			{/each} -->
 			<!-- svelte-ignore a11y-autofocus -->
 			<button autofocus class="border w-[25%] mt-2" on:click={() => dialog2.close()}
 				>Edit Item</button
