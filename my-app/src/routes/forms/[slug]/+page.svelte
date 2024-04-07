@@ -3,7 +3,7 @@
 
 	import { applyAction, enhance } from '$app/forms';
 	import { goto, invalidateAll } from '$app/navigation';
-	import '../../app.css';
+	import '../../../app.css';
 
 	export let data;
 	let dialog; // HTMLDialogElement
@@ -16,6 +16,7 @@
 		itemToEdit = item;
 		dialog2.showModal();
 	}
+	let formElement;
 </script>
 
 <div class="w-full h-full">
@@ -35,8 +36,30 @@
 			</div>
 		</div>
 		<div class="w-3/4 justify-between mx-8">
-			<div class="flex justify-between mx-8">
-				<h3 class="text-lg">Yaks</h3>
+			<div class="flex justify-between items-center mx-8">
+				<form
+					method="POST"
+					action="?/getProducts"
+					use:enhance={({}) => {
+						return async ({ result }) => {
+							await invalidateAll();
+							await applyAction(result);
+						};
+					}}
+					bind:this={formElement}
+				>
+					<select
+						class="border-2 border-[#777777]"
+						name="productSelection"
+						on:change={() => {
+							formElement.requestSubmit();
+						}}
+						>{#each data.productNames as item}
+							<option class="w-5">{item}</option>
+						{/each}</select
+					>
+				</form>
+
 				<button
 					on:click={() => dialog.showModal()}
 					class="bg-black py-2 px-4 h-8 rounded-md text-white flex justify-center items-center"
