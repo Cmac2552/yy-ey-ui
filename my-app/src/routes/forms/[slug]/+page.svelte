@@ -8,14 +8,21 @@
 	export let data;
 	let dialog; // HTMLDialogElement
 	let dialog2;
+	let dialog3;
+	let columns = [];
 	export let showModal = false; // boolean
 	export let showModal2 = false;
+	export let showModal3 = false;
 	let itemToEdit = {};
 	function editItem(item) {
 		console.log(item);
 		itemToEdit = item;
 		dialog2.showModal();
 	}
+	function addColumns(columnName) {
+		columns = [...columns, columnName];
+	}
+
 	let formElement;
 </script>
 
@@ -27,7 +34,16 @@
 		</div>
 	</div>
 	<hr class="bg-black my-1 w-screen" />
-	<h2 class="text-2xl my-2 mx-4">Inventory Table</h2>
+	<div class="flex items-center">
+		<h2 class="text-2xl my-2 mx-4">Inventory Table</h2>
+		<button
+			on:click={dialog3.showModal()}
+			class="bg-gray-400 flex items-center justify-center rounded-md h-6 w-6"
+			><span class="bg-gray-400 flex items-center justify-center rounded-md h-4 w-4">+</span
+			></button
+		>
+	</div>
+
 	<div class="w-full h-full my-12 flex">
 		<div style="width: 12.5%">
 			<h3 class="text-xl mx-4">Filters</h3>
@@ -131,7 +147,7 @@
 		</form>
 	</div>
 </dialog>
-<!-- svelte-ignore a11y-click-events-have-key-events a11y-no-noninteractive-element-interactions -->\
+<!-- svelte-ignore a11y-click-events-have-key-events a11y-no-noninteractive-element-interactions -->
 <dialog
 	bind:this={dialog2}
 	on:close={() => (showModal2 = false)}
@@ -170,29 +186,48 @@
 				class="border w-[50%] mt-2"
 				name="productNumber"
 			/>
-			<!-- {#each itemToEdit as [name, value]}
-				{#if name !== 'productNumber'}
-					<div>
-						<input bind:value class="border w-[50%] mt-2" {name} />
-						<span>{name}</span>
-					</div>
-				{:else}
-					<div>
-						<input
-							bind:value
-							type="number"
-							class=" w-[50%] mt-2 pointer-events-none focus-within:border-none"
-							{name}
-						/>
-
-						<span>{name}</span>
-					</div>
-				{/if}
-			{/each} -->
 			<!-- svelte-ignore a11y-autofocus -->
 			<button autofocus class="border w-[25%] mt-2" on:click={() => dialog2.close()}
 				>Edit Item</button
 			>
 		</form>
+	</div>
+</dialog>
+<!-- svelte-ignore a11y-click-events-have-key-events a11y-no-noninteractive-element-interactions -->
+<dialog
+	bind:this={dialog3}
+	on:close={() => (showModal3 = false)}
+	on:click|self={() => dialog3.close()}
+>
+	<!-- svelte-ignore a11y-no-static-element-interactions -->
+	<div
+		class="w-[30rem] h-fit-content pl-3 pt-4 pb-8 bg-white flex flex-col"
+		on:click|stopPropagation
+	>
+		<h2 class="font-bold text-3xl mb-4">Create Table</h2>
+		<form
+			class="flex flex-col"
+			method="POST"
+			action="?/editItem"
+			use:enhance={({ formElement }) => {
+				formElement.reset();
+				return async ({ result }) => {
+					await invalidateAll();
+					await applyAction(result);
+				};
+			}}
+		>
+			<!-- Convert this to use attrs to determine how many inputs to use -->
+			<div><span>Table Name</span><input class="border w-[50%] ml-2" name="tableName" /></div>
+			<h3 class="font-bold text-xl mt-2">Add Columns</h3>
+			{#each columns as name}
+				<input class="border" />{/each}
+
+			<!-- svelte-ignore a11y-autofocus -->
+			<button autofocus class="border w-[25%] mt-2" on:click={() => dialog3.close()}
+				>Edit Item</button
+			>
+		</form>
+		<button on:click={() => addColumns('temp')}>Add Column</button>
 	</div>
 </dialog>
