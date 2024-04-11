@@ -75,5 +75,27 @@ export const actions = {
     getProducts: async (event) => {
         const data = await event.request.formData()
         throw redirect(302, `/forms/${data.get('productSelection')}`);
+    },
+    addTable: async (event) => {
+        const data = await event.request.formData()
+        const attributes = []
+        for (let field of data) {
+            const [key, _] = field
+            if (key !== 'tableName') {
+                attributes.push(data.get(key))
+            }
+        }
+
+        const api_url = 'http://localhost:1323';
+        const resp = await fetch(`${api_url}/inventory/product-and-attributes`, {
+            method: "POST",
+            headers: { 'Authorization': event.cookies.get('Auth-token'), 'content-type': 'application/json' },
+            body: JSON.stringify({ 'productTypeName': data.get('tableName'), attributes })
+        })
+
+        if (resp.status === 200) {
+            redirect(302, `/forms/${data.get('tableName')}`)
+        }
+
     }
 };

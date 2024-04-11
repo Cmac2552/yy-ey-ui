@@ -19,8 +19,8 @@
 		itemToEdit = item;
 		dialog2.showModal();
 	}
-	function addColumns(columnName) {
-		columns = [...columns, columnName];
+	function addColumns() {
+		columns = [...columns, columns.length.toString()];
 	}
 
 	let formElement;
@@ -39,7 +39,7 @@
 		<button
 			on:click={dialog3.showModal()}
 			class="bg-gray-400 flex items-center justify-center rounded-md h-6 w-6"
-			><span class="bg-gray-400 flex items-center justify-center rounded-md h-4 w-4">+</span
+			><span class="bg-gray-400 flex items-center justify-center rounded-full h-4 w-4">+</span
 			></button
 		>
 	</div>
@@ -208,7 +208,7 @@
 		<form
 			class="flex flex-col"
 			method="POST"
-			action="?/editItem"
+			action="?/addTable"
 			use:enhance={({ formElement }) => {
 				formElement.reset();
 				return async ({ result }) => {
@@ -220,14 +220,17 @@
 			<!-- Convert this to use attrs to determine how many inputs to use -->
 			<div><span>Table Name</span><input class="border w-[50%] ml-2" name="tableName" /></div>
 			<h3 class="font-bold text-xl mt-2">Add Columns</h3>
-			{#each columns as name}
-				<input class="border" />{/each}
+			{#each columns as name, index}
+				<input class="border w-3/4 mb-2" name={index} />{/each}
+			<button
+				type="button"
+				class="w-5 rounded-md flex items-center justify-center bg-gray-400"
+				on:click={() => addColumns('temp')}>+</button
+			>
 
 			<!-- svelte-ignore a11y-autofocus -->
-			<button autofocus class="border w-[25%] mt-2" on:click={() => dialog3.close()}
-				>Edit Item</button
+			<button autofocus class="border w-1/4 mt-2" on:click={() => dialog3.close()}>Edit Item</button
 			>
 		</form>
-		<button on:click={() => addColumns('temp')}>Add Column</button>
 	</div>
 </dialog>
