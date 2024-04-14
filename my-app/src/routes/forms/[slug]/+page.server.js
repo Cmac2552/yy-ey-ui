@@ -102,7 +102,6 @@ export const actions = {
     addColumn: async (event) => {
         const data = await event.request.formData()
         const columnName = data.get("column-name")
-        console.log(data.get("column-name"), data.get('table-name'))
 
         const api_url = 'http://localhost:1323';
         const resp = await fetch(`${api_url}/inventory/add-product-attribute`, {
