@@ -9,10 +9,12 @@
 	let dialog; // HTMLDialogElement
 	let dialog2;
 	let dialog3;
+	let dialog4;
 	let columns = [];
 	export let showModal = false; // boolean
 	export let showModal2 = false;
 	export let showModal3 = false;
+	export let showModal4 = false;
 	let itemToEdit = {};
 	function editItem(item) {
 		console.log(item);
@@ -39,7 +41,10 @@
 		<button
 			on:click={dialog3.showModal()}
 			class="bg-gray-400 flex items-center justify-center rounded-md h-6 w-6"
-			><span class="bg-gray-400 flex items-center justify-center rounded-full h-4 w-4">+</span
+			><span class="bg-gray-400 flex items-center justify-center rounded-full h-4 w-4"
+				><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"
+					><path fill="currentColor" d="M19 12.998h-6v6h-2v-6H5v-2h6v-6h2v6h6z" /></svg
+				></span
 			></button
 		>
 	</div>
@@ -53,28 +58,48 @@
 		</div>
 		<div class="w-3/4 justify-between mx-8">
 			<div class="flex justify-between items-center mx-8">
-				<form
-					method="POST"
-					action="?/getProducts"
-					use:enhance={({}) => {
-						return async ({ result }) => {
-							await invalidateAll();
-							await applyAction(result);
-						};
-					}}
-					bind:this={formElement}
-				>
-					<select
-						class="border-2 border-[#777777]"
-						name="productSelection"
-						on:change={() => {
-							formElement.requestSubmit();
+				<div class="flex">
+					<form
+						method="POST"
+						action="?/getProducts"
+						use:enhance={({}) => {
+							return async ({ result }) => {
+								await invalidateAll();
+								await applyAction(result);
+							};
 						}}
-						>{#each data.productNames as item}
-							<option class="w-5">{item}</option>
-						{/each}</select
+						bind:this={formElement}
 					>
-				</form>
+						<select
+							class="border-2 border-[#777777]"
+							name="productSelection"
+							bind:value={data.slug}
+							on:change={() => {
+								formElement.requestSubmit();
+							}}
+							>{#each data.productNames as item}
+								<option class="w-5" value={item}>{item}</option>
+							{/each}</select
+						>
+					</form>
+					<button on:click={dialog4.showModal()}
+						><svg
+							xmlns="http://www.w3.org/2000/svg"
+							width="24"
+							height="24"
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="2"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							class="icon icon-tabler icons-tabler-outline icon-tabler-settings"
+							><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path
+								d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z"
+							/><path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" /></svg
+						></button
+					>
+				</div>
 
 				<button
 					on:click={() => dialog.showModal()}
@@ -110,7 +135,7 @@
 		</div>
 	</div>
 </div>
-<!-- svelte-ignore a11y-click-events-have-key-events a11y-no-noninteractive-element-interactions -->\
+<!-- svelte-ignore a11y-click-events-have-key-events a11y-no-noninteractive-element-interactions -->
 <dialog
 	bind:this={dialog}
 	on:close={() => (showModal = false)}
@@ -224,13 +249,48 @@
 				<input class="border w-3/4 mb-2" name={index} />{/each}
 			<button
 				type="button"
-				class="w-5 rounded-md flex items-center justify-center bg-gray-400"
-				on:click={() => addColumns('temp')}>+</button
-			>
+				class="w-5 h-5 rounded-md flex items-center justify-center bg-gray-400"
+				on:click={() => addColumns('temp')}
+				><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"
+					><path fill="currentColor" d="M19 12.998h-6v6h-2v-6H5v-2h6v-6h2v6h6z" /></svg
+				>
+			</button>
 
 			<!-- svelte-ignore a11y-autofocus -->
-			<button autofocus class="border w-1/4 mt-2" on:click={() => dialog3.close()}>Edit Item</button
-			>
+			<button autofocus class="border w-1/4 mt-2" on:click={() => dialog3.close()}
+				>Create Table
+			</button>
+		</form>
+	</div>
+</dialog>
+<!-- svelte-ignore a11y-click-events-have-key-events a11y-no-noninteractive-element-interactions -->
+<dialog
+	bind:this={dialog4}
+	on:close={() => (showModal4 = false)}
+	on:click|self={() => dialog4.close()}
+>
+	<!-- svelte-ignore a11y-no-static-element-interactions -->
+	<div
+		class="w-[30rem] h-fit-content pl-3 pt-4 pb-8 bg-white flex flex-col"
+		on:click|stopPropagation
+	>
+		<form
+			class="flex flex-col"
+			method="POST"
+			action="?/addColumn"
+			use:enhance={({ formElement }) => {
+				formElement.reset();
+				return async ({ result }) => {
+					await invalidateAll();
+					await applyAction(result);
+				};
+			}}
+		>
+			<!-- Convert this to use attrs to determine how many inputs to use -->
+			<h2 class="font-bold text-3xl mb-4">Create Table</h2>
+			<input class="border w-3/4 mb-2" name="column-name" />
+			<input hidden class="border w-3/4 mb-2" bind:value={data.slug} name="table-name" />
+			<button class="border w-1/4 mt-2" on:click={() => dialog4.close()}>Add Column</button>
 		</form>
 	</div>
 </dialog>

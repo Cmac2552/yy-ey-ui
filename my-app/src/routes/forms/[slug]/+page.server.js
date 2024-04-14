@@ -31,7 +31,8 @@ export const load = async ({ cookies, params }) => {
     return {
         productNames: (await productNamesRequest.json()).productNames,
         attributes: products,
-        values: (await productValuesRequest.json()).products
+        values: (await productValuesRequest.json()).products,
+        slug: params.slug
     }
 };
 
@@ -95,6 +96,23 @@ export const actions = {
 
         if (resp.status === 200) {
             redirect(302, `/forms/${data.get('tableName')}`)
+        }
+
+    },
+    addColumn: async (event) => {
+        const data = await event.request.formData()
+        const columnName = data.get("column-name")
+        console.log(data.get("column-name"), data.get('table-name'))
+
+        const api_url = 'http://localhost:1323';
+        const resp = await fetch(`${api_url}/inventory/add-product-attribute`, {
+            method: "POST",
+            headers: { 'Authorization': event.cookies.get('Auth-token'), 'content-type': 'application/json' },
+            body: JSON.stringify({ 'productTypeName': data.get('table-name'), 'attributeName': columnName })
+        })
+
+        if (resp.status === 200) {
+            redirect(302, `/forms/${data.get('table-name')}`)
         }
 
     }
