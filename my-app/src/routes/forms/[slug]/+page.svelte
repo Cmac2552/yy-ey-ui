@@ -129,6 +129,31 @@
 						{/each}
 					</div>
 					<button on:click={() => editItem(item)}>EDIT</button>
+
+					<button
+						on:click={async (e) => {
+							const resp = await fetch(
+								`http://localhost:1323/inventory/product/${data.slug}/${item['productNumber']}`,
+								{
+									method: 'DELETE',
+									headers: { Authorization: data.auth }
+								}
+							);
+
+							if (resp.status === 200) {
+								data.values = data.values.filter(
+									(value) => value['productNumber'] !== item['productNumber']
+								);
+							}
+						}}
+						><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"
+							><path
+								fill="currentColor"
+								d="M9 3v1H4v2h1v13a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V6h1V4h-5V3zM7 6h10v13H7zm2 2v9h2V8zm4 0v9h2V8z"
+							/></svg
+						></button
+					>
+
 					<hr class="border-t-2" />
 				{/each}
 			</div>

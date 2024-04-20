@@ -32,7 +32,8 @@ export const load = async ({ cookies, params }) => {
         productNames: (await productNamesRequest.json()).productNames,
         attributes: products,
         values: (await productValuesRequest.json()).products,
-        slug: params.slug
+        slug: params.slug,
+        auth: cookies.get('Auth-token')
     }
 };
 
@@ -104,15 +105,26 @@ export const actions = {
         const columnName = data.get("column-name")
 
         const api_url = 'http://localhost:1323';
-        const resp = await fetch(`${api_url}/inventory/add-product-attribute`, {
+        fetch(`${api_url}/inventory/add-product-attribute`, {
             method: "POST",
             headers: { 'Authorization': event.cookies.get('Auth-token'), 'content-type': 'application/json' },
             body: JSON.stringify({ 'productTypeName': data.get('table-name'), 'attributeName': columnName })
         })
 
-        if (resp.status === 200) {
-            redirect(302, `/forms/${data.get('table-name')}`)
-        }
 
-    }
+    },
+    // deleteProduct: async (event) => {
+    //     const data = await event.requestl.formData()
+    //     const productNumber = data.get('productNumber')
+    //     const productName = event.params.slug
+
+    //     console.log('test')
+
+    //     const api_url = 'http://localhost:1323';
+    //     fetch(`${api_url}/inventory/product/${productName}/${productNumber}`, {
+    //         method: 'DELETE',
+    //         headers: { 'Authorization': event.cookies.get('Auth-token') },
+    //     })
+    // }
+
 };
