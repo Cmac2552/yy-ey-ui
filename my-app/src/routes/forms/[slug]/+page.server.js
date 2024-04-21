@@ -4,12 +4,10 @@ import { redirect } from '@sveltejs/kit';
 
 export const load = async ({ cookies, params }) => {
 
-    const productNamesRequest = await fetch('http://localhost:1323/inventory/productNames', {
+    const productNamesRequest = await fetch('http://localhost:1323/inventory/product-names', {
 
         headers: { 'Authorization': cookies.get('Auth-token') }
     })
-
-
 
     const productValuesRequest = await fetch(`http://localhost:1323/inventory/products/${params.slug}`, {
 
@@ -24,14 +22,16 @@ export const load = async ({ cookies, params }) => {
         headers: { 'Authorization': cookies.get('Auth-token') }
     })
 
-    const products = (await productAttribiteNamesRequest.json()).productAttributeName.map((element) => {
+    const attributes = (await productAttribiteNamesRequest.json()).productAttributeName.map((element) => {
         return { element }
     })
+    const values = (await productValuesRequest.json()).products
+    console.log(values)
 
     return {
         productNames: (await productNamesRequest.json()).productNames,
-        attributes: products,
-        values: (await productValuesRequest.json()).products,
+        attributes: attributes,
+        values: values,
         slug: params.slug,
         auth: cookies.get('Auth-token')
     }
@@ -64,6 +64,7 @@ export const actions = {
                 attrValues[key] = value
             }
         }
+        console.log(data)
 
         const api_url = 'http://localhost:1323';
         await fetch(`${api_url}/inventory/product-and-attribute-values`, {
@@ -110,21 +111,7 @@ export const actions = {
             headers: { 'Authorization': event.cookies.get('Auth-token'), 'content-type': 'application/json' },
             body: JSON.stringify({ 'productTypeName': data.get('table-name'), 'attributeName': columnName })
         })
+    }
 
-
-    },
-    // deleteProduct: async (event) => {
-    //     const data = await event.requestl.formData()
-    //     const productNumber = data.get('productNumber')
-    //     const productName = event.params.slug
-
-    //     console.log('test')
-
-    //     const api_url = 'http://localhost:1323';
-    //     fetch(`${api_url}/inventory/product/${productName}/${productNumber}`, {
-    //         method: 'DELETE',
-    //         headers: { 'Authorization': event.cookies.get('Auth-token') },
-    //     })
-    // }
 
 };

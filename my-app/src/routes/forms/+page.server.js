@@ -5,7 +5,7 @@ import { redirect } from '@sveltejs/kit';
 export const load = async ({ cookies }) => {
 
     //get the first one and go there
-    const productNamesRequest = await fetch('http://localhost:1323/inventory/productNames', {
+    const productNamesRequest = await fetch('http://localhost:1323/inventory/product-names', {
 
         headers: { 'Authorization': cookies.get('Auth-token') }
     })
@@ -16,5 +16,7 @@ export const load = async ({ cookies }) => {
 
     //or tell the person they need to create one
 };
+
+
 
 
