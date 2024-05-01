@@ -12,6 +12,8 @@
 	import Table from '../../../modals/table.svelte';
 	import Edit from '../../../modals/edit.svelte';
 	import Add from '../../../modals/add.svelte';
+	import { createFilterStore, filterHandler } from '$lib/stores/filter';
+	import { onDestroy } from 'svelte';
 
 	export let data;
 	export let showAddModal = false;
@@ -23,6 +25,33 @@
 		itemToEdit = item;
 		showEditModal = true;
 	}
+	// let filteredValues = data.values;
+
+	// function filterStuff(filterSection, filterValue) {
+	// 	filteredValues = data.values.filter((data) => {
+	// 		return Object.keys(data).find((key) => key === filterSection && data[key] === filterValue);
+	// 	});
+	// 	console.log(filteredValues);
+	// }
+	// let currentlyAppliedFilters = [];
+
+	// function applyFilter(filters, values) {
+	// 	filteredValues = values;
+	// 	if (filters.length > 0) {
+	// 		filters.forEach((filterValue) => {
+	// 			filteredValues.concat(filterStuff(filterValue[0], filterValue[1]));
+	// 		});
+	// 	}
+	// 	return filteredValues;
+	// }
+
+	const filterStore = createFilterStore(data.values);
+
+	const unsubscribe = filterStore.subscribe((model) => filterHandler(model));
+
+	onDestroy(() => {
+		unsubscribe();
+	});
 
 	let formElement;
 </script>
@@ -45,6 +74,14 @@
 			></button
 		>
 	</div>
+	<button
+		on:click={() =>
+			($filterStore.filters = [
+				['color', 'red'],
+				['size', 'xl']
+			])}
+		class="tw-w-10 tw-h-10">APPLY!</button
+	>
 
 	<div class="w-full h-full my-12 flex">
 		<div style="width: 12.5%">
@@ -99,7 +136,7 @@
 			</div>
 			<hr class="border-t-2" />
 			<div>
-				{#each data.values as item}
+				{#each $filterStore.filtered as item}
 					<div class="group flex py-2">
 						<div class="flex">
 							{#each data.attributes as attribute}
@@ -129,9 +166,7 @@
 									);
 
 									if (resp.status === 200) {
-										data.values = data.values.filter(
-											(value) => value['productNumber'] !== item['productNumber']
-										);
+										$filterStore.deleteItem = item;
 									}
 								}}><TrashCan></TrashCan></button
 							>

@@ -30,6 +30,7 @@
 			use:enhance={({ formElement }) => {
 				formElement.reset();
 				return async ({ result }) => {
+					console.log(result.data.attrValues);
 					await invalidateAll();
 					await applyAction(result);
 				};

@@ -26,7 +26,6 @@ export const load = async ({ cookies, params }) => {
         return { element }
     })
     const values = (await productValuesRequest.json()).products
-    console.log(values)
 
     return {
         productNames: (await productNamesRequest.json()).productNames,
@@ -53,6 +52,7 @@ export const actions = {
             headers: { 'Authorization': event.cookies.get('Auth-token'), 'content-type': 'application/json' },
             body: JSON.stringify({ 'productTypeName': event.params.slug, attrValues })
         })
+        return { attrValues }
     },
     editItem: async (event) => {
         const data = await event.request.formData();
@@ -64,7 +64,6 @@ export const actions = {
                 attrValues[key] = value
             }
         }
-        console.log(data)
 
         const api_url = 'http://localhost:1323';
         await fetch(`${api_url}/inventory/product-and-attribute-values`, {
