@@ -25,14 +25,21 @@ export const load = async ({ cookies, params }) => {
     const attributes = (await productAttribiteNamesRequest.json()).productAttributeName.map((element) => {
         return { element }
     })
-    const values = (await productValuesRequest.json()).products
+
+    const productFilterRequest = await fetch(`http://localhost:1323/inventory/product-filters/${params.slug}`, {
+
+        headers: { 'Authorization': cookies.get('Auth-token') }
+    })
+
+
 
     return {
         productNames: (await productNamesRequest.json()).productNames,
         attributes: attributes,
-        values: values,
+        values: (await productValuesRequest.json()).products,
         slug: params.slug,
-        auth: cookies.get('Auth-token')
+        auth: cookies.get('Auth-token'),
+        filters: (await productFilterRequest.json())
     }
 };
 

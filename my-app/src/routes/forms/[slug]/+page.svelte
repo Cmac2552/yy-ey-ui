@@ -25,26 +25,6 @@
 		itemToEdit = item;
 		showEditModal = true;
 	}
-	// let filteredValues = data.values;
-
-	// function filterStuff(filterSection, filterValue) {
-	// 	filteredValues = data.values.filter((data) => {
-	// 		return Object.keys(data).find((key) => key === filterSection && data[key] === filterValue);
-	// 	});
-	// 	console.log(filteredValues);
-	// }
-	// let currentlyAppliedFilters = [];
-
-	// function applyFilter(filters, values) {
-	// 	filteredValues = values;
-	// 	if (filters.length > 0) {
-	// 		filters.forEach((filterValue) => {
-	// 			filteredValues.concat(filterStuff(filterValue[0], filterValue[1]));
-	// 		});
-	// 	}
-	// 	return filteredValues;
-	// }
-
 	const filterStore = createFilterStore(data.values);
 
 	const unsubscribe = filterStore.subscribe((model) => filterHandler(model));
@@ -52,6 +32,16 @@
 	onDestroy(() => {
 		unsubscribe();
 	});
+
+	function filterStuff(category, value) {
+		if ($filterStore.filters.find((filter) => filter[0] === category && filter[1] === value)) {
+			$filterStore.filters = $filterStore.filters.filter(
+				(filter) => filter[0] !== category || filter[1] !== value
+			);
+		} else {
+			$filterStore.filters = $filterStore.filters.concat([[category, value]]);
+		}
+	}
 
 	let formElement;
 </script>
@@ -74,20 +64,23 @@
 			></button
 		>
 	</div>
-	<button
-		on:click={() =>
-			($filterStore.filters = [
-				['color', 'red'],
-				['size', 'xl']
-			])}
-		class="tw-w-10 tw-h-10">APPLY!</button
-	>
+	<button on:click={() => console.log($filterStore.filters)} class="tw-w-10 tw-h-10">APPLY!</button>
 
 	<div class="w-full h-full my-12 flex">
 		<div style="width: 12.5%">
 			<h3 class="text-xl mx-4">Filters</h3>
 			<div class=" h-full mx-4">
-				<div class="bg-slate-600" style="height:40rem"></div>
+				{#each Object.entries(data.filters) as [category, values]}
+					{category}
+					<div class="flex flex-col mb-4">
+						{#each values as value}
+							<div>
+								<input type="checkbox" name={value} on:click={() => filterStuff(category, value)} />
+								<label for={value}>{value}</label>
+							</div>
+						{/each}
+					</div>
+				{/each}
 			</div>
 		</div>
 		<div class="w-3/4 justify-between mx-8">

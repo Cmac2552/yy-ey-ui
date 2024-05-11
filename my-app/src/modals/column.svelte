@@ -48,7 +48,6 @@
 				id="table-name"
 				name="table-name"
 			/>
-			<button type="button" on:click={() => addColumns()}>Stuff</button>
 			<button class="border w-1/4 mt-2" on:click={() => dialog.close()}>Add Column</button>
 		</form>
 	</div>
