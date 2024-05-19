@@ -54,11 +54,12 @@ export const actions = {
         }
 
         const api_url = 'http://localhost:1323';
-        await fetch(`${api_url}/inventory/product-and-attribute-values`, {
+        const resp = await fetch(`${api_url}/inventory/product-and-attribute-values`, {
             method: "POST",
             headers: { 'Authorization': event.cookies.get('Auth-token'), 'content-type': 'application/json' },
             body: JSON.stringify({ 'productTypeName': event.params.slug, attrValues })
         })
+        attrValues['productNumber'] = (await resp.json()).productNumber
         return { attrValues }
     },
     editItem: async (event) => {

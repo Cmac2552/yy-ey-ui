@@ -22,7 +22,7 @@ export const filterHandler = (store) => {
         store.deleteItem = null
     }
     if (store.addItem) {
-        store.data = store
+        store.data = [...store.data, store.addItem]
         store.addItem = null
     }
     if (store.filters.length !== 0) {
@@ -38,10 +38,6 @@ export const filterHandler = (store) => {
     } else {
         store.filtered = store.data
     }
-
-}
-
-export const deleteHandler = (store) => {
 
 }
 

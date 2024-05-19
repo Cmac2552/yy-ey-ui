@@ -6,6 +6,7 @@
 
 	export let showAddModal;
 	export let attributes;
+	export let filterStore;
 	let dialog;
 
 	$: if (dialog && showAddModal) dialog.showModal();
@@ -30,7 +31,8 @@
 			use:enhance={({ formElement }) => {
 				formElement.reset();
 				return async ({ result }) => {
-					console.log(result.data.attrValues);
+					console.log(result);
+					$filterStore.addItem = result.data.attrValues;
 					await invalidateAll();
 					await applyAction(result);
 				};

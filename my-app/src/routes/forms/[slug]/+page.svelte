@@ -172,7 +172,7 @@
 		</div>
 	</div>
 </div>
-<Add bind:showAddModal attributes={data.attributes}></Add>
+<Add bind:showAddModal attributes={data.attributes} {filterStore}></Add>
 <Edit bind:showEditModal {itemToEdit} attributes={data.attributes}></Edit>
 <Table bind:showAddTableModal></Table>
 <Column bind:showAddColumn tableName={data.slug}></Column>
