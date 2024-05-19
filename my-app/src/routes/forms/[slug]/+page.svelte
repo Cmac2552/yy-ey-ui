@@ -16,6 +16,7 @@
 	import { onDestroy } from 'svelte';
 
 	export let data;
+	let items = [];
 	export let showAddModal = false;
 	export let showEditModal = false;
 	export let showAddTableModal = false;
@@ -25,9 +26,11 @@
 		itemToEdit = item;
 		showEditModal = true;
 	}
-	const filterStore = createFilterStore(data.values);
-
-	const unsubscribe = filterStore.subscribe((model) => filterHandler(model));
+	let filterStore = createFilterStore(items);
+	let unsubscribe = filterStore.subscribe((model) => filterHandler(model));
+	$: unsubscribe(),
+		(filterStore = createFilterStore(data.values)),
+		(unsubscribe = filterStore.subscribe((model) => filterHandler(model)));
 
 	onDestroy(() => {
 		unsubscribe();
@@ -64,7 +67,6 @@
 			></button
 		>
 	</div>
-	<button on:click={() => console.log($filterStore.filters)} class="tw-w-10 tw-h-10">APPLY!</button>
 
 	<div class="w-full h-full my-12 flex">
 		<div style="width: 12.5%">

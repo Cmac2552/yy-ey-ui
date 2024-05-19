@@ -9,9 +9,6 @@
 	let dialog;
 
 	$: if (dialog && showAddColumn) dialog.showModal();
-	function addColumns() {
-		console.log(tableName, 1);
-	}
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events a11y-no-noninteractive-element-interactions -->
