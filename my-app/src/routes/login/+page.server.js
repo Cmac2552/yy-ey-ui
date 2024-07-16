@@ -14,7 +14,7 @@ export const actions = {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ 'username': name, 'password': password })
             }
-        )
+        ).catch(() => { throw redirect(302, "/error"); })
 
         let token = await response.json();
 
@@ -46,7 +46,7 @@ export const actions = {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ 'username': name, 'password': password, 'organization': organization })
             }
-        )
+        ).catch(() => { throw redirect(302, "/error"); })
 
         let token = await response.json();
 
@@ -58,6 +58,7 @@ export const actions = {
                 sameSite: 'strict',
                 maxAge: 60 * 60 * 24 // 1 day
             })
+            eles
 
             throw redirect(302, "/forms");
         } else if (response.status === 409) {

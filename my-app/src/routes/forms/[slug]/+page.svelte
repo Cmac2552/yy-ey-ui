@@ -171,16 +171,17 @@
 					<hr class="border-t-2" />
 				{/each}
 			</div>
-			<button
-				on:click={() => {
-					$filterStore.prevPage = true;
-				}}><Gear></Gear></button
-			>
-			<button
-				on:click={() => {
-					$filterStore.nextPage = true;
-				}}><TrashCan></TrashCan></button
-			>
+			{#if $filterStore.hasPrevPage}<button
+					on:click={() => {
+						$filterStore.prevPage = true;
+					}}><Gear></Gear></button
+				>{/if}
+
+			{#if $filterStore.hasNextPage}<button
+					on:click={() => {
+						$filterStore.nextPage = true;
+					}}><TrashCan></TrashCan></button
+				>{/if}
 		</div>
 	</div>
 </div>
