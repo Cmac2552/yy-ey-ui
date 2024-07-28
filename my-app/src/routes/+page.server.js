@@ -7,7 +7,7 @@ export const load = async ({ cookies }) => {
     })
 
 
-    throw redirect(302, "/login");
+    // throw redirect(302, "/login");
 
 
 };

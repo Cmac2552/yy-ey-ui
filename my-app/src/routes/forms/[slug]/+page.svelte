@@ -14,6 +14,8 @@
 	import Add from '../../../modals/add.svelte';
 	import { createFilterStore, filterHandler } from '$lib/stores/filter';
 	import { onDestroy } from 'svelte';
+	import RightArrow from '../../../right-arrow.svelte';
+	import LeftArrow from '../../../left-arrow.svelte';
 
 	export let data;
 	let items = [];
@@ -50,13 +52,6 @@
 </script>
 
 <div class="w-full h-full">
-	<div class="flex justify-between">
-		<h1 class="font-bold text-3xl my-2 mx-4">YY-EY</h1>
-		<div class="bg-gray-300 w-10 h-10 my-2 mx-3 rounded-full flex justify-center items-center">
-			CM
-		</div>
-	</div>
-	<hr class="bg-black my-1" />
 	<div class="flex items-center">
 		<h2 class="text-2xl my-2 mx-4">Inventory Table</h2>
 		<button
@@ -174,13 +169,13 @@
 			{#if $filterStore.hasPrevPage}<button
 					on:click={() => {
 						$filterStore.prevPage = true;
-					}}><Gear></Gear></button
+					}}><LeftArrow></LeftArrow></button
 				>{/if}
 
 			{#if $filterStore.hasNextPage}<button
 					on:click={() => {
 						$filterStore.nextPage = true;
-					}}><TrashCan></TrashCan></button
+					}}><RightArrow></RightArrow></button
 				>{/if}
 		</div>
 	</div>
